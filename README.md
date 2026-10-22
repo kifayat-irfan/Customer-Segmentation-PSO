@@ -4,60 +4,60 @@
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-FF9F1C?style=for-the-badge&logo=scikit-learn&logoColor=white)
 ![PSO](https://img.shields.io/badge/Optimization-PSO-blue?style=for-the-badge)
 
-A professional **Unsupervised Learning" project that uses **Particle Swarm Optimization (PSO)** to enhance K-Means clustering for customer segmentation.
+I built this unsupervised learning project to segment shopping-mall customers by **Annual Income** and **Spending Score**, using **Particle Swarm Optimization (PSO)** to find better initial centroids than standard K-Means random seeding.
 
 ---
 
-##  Project Overview
+## Project Overview
 
-This project segments customers of a shopping mall based on their **Annual Income** and **Spending Score** using an advanced approach combining **K-Means Clustering** with **Particle Swarm Optimization (PSO)**.
+Standard K-Means is sensitive to its initial centroids. Here, PSO (via `pyswarm`) optimizes all 5 centroids at once — each particle is a flattened set of centroids, and the objective is the K-Means inertia (sum of squared distances) computed on standardized features. The best centroids found by the swarm are then used for the final cluster assignment, and the code reports a **silhouette score** on the scaled data.
 
-PSO is used to intelligently optimize the initial cluster centroids, leading to better cluster quality compared to standard K-Means.
-
-### Key Achievements
-- **Silhouette Score**: **0.5399**
-- Optimal number of clusters: **5**
-- Clean, modular, and production-ready code structure
-- Beautiful visualizations and saved results
+### What the code does
+- Loads the Mall Customers dataset (`data/Mall_Customers.csv`), uses the two features `Annual Income (k$)` and `Spending Score (1-100)`
+- Standardizes both features with `StandardScaler`
+- Runs PSO (25 particles, 80 iterations) to minimize inertia over the centroid space
+- Assigns final clusters, prints silhouette score + inertia + cluster centers, saves a scatter plot (`results/PSO_Customer_Segmentation.png`) and the labeled dataset (`results/Mall_Customers_PSO_Clusters.csv`)
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Language**: Python 3.10+
-- **Machine Learning**: scikit-learn
 - **Optimization**: pyswarm (PSO)
+- **Evaluation**: scikit-learn (StandardScaler, silhouette_score)
 - **Visualization**: Matplotlib, Seaborn
 - **Data Handling**: Pandas, NumPy
 
 ---
 
-##  Project Structure
+## Project Structure
 
 ```bash
-customer-segmentation-pso/
-├── data/
+Customer-Segmentation-PSO/
+├── data/                        # ← not in repo: add Mall_Customers.csv here (git-ignored)
 │   └── Mall_Customers.csv
-├── results/
+├── results/                     # ← generated on run (git-ignored)
 │   ├── PSO_Customer_Segmentation.png
 │   └── Mall_Customers_PSO_Clusters.csv
 ├── src/
-│   ├── config.py
-│   ├── pso_logic.py
-│   └── main.py
-├── README.md
+│   ├── config.py                # paths, features, k=5, PSO settings, plot settings
+│   ├── pso_logic.py             # PSO_KMeans: inertia objective + pso() wrapper
+│   └── main.py                  # full pipeline: load → scale → PSO → evaluate → plot → save
 ├── requirements.txt
-└── .gitignore
+├── LICENSE
+└── README.md
 ```
 
 ---
 
-##  How to Run
+## How to Run
+
+> The dataset is not committed to this repo. Download the well-known **Mall Customers** dataset (e.g. from Kaggle) and place it at `data/Mall_Customers.csv`.
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/customer-segmentation-pso.git
-cd customer-segmentation-pso
+git clone https://github.com/kifayat-irfan/Customer-Segmentation-PSO.git
+cd Customer-Segmentation-PSO
 ```
 
 ### 2. Install Dependencies
@@ -70,25 +70,23 @@ pip install -r requirements.txt
 python src/main.py
 ```
 
----
-
-##  Results
-
-**Best PSO Optimized Clusters:**
-
-| Cluster | Annual Income (k$) | Spending Score | Interpretation              |
-|---------|--------------------|----------------|-----------------------------|
-| 0       | ~87.4              | 16.2           | High Income, Low Spenders   |
-| 1       | ~84.2              | 82.3           | **Premium Customers**       |
-| 2       | ~57.5              | 47.8           | Average Customers           |
-| 3       | ~32.3              | 29.8           | Low Income, Moderate Spend  |
-| 4       | ~29.6              | 80.1           | **Impulse Buyers**          |
-
-![Customer Segmentation Plot](results/PSO_Customer_Segmentation.png)
+This prints the silhouette score, best inertia, and cluster centers to the console, and writes the plot + labeled CSV into `results/`.
 
 ---
 
-##  Business Insights
+## Results (from an original run)
+
+The example run in my notes reported a **silhouette score of ~0.54** with **5 clusters**. Typical cluster profiles look like this (your exact numbers will vary slightly between runs since PSO is stochastic):
+
+| Cluster | Annual Income (k$) | Spending Score | Interpretation            |
+|---------|--------------------|----------------|---------------------------|
+| 0       | ~87                | ~16            | High Income, Low Spenders |
+| 1       | ~84                | ~82            | Premium Customers         |
+| 2       | ~58                | ~48            | Average Customers         |
+| 3       | ~32                | ~30            | Low Income, Low Spenders  |
+| 4       | ~30                | ~80            | Impulse Buyers            |
+
+## Business Insights
 
 - **Premium Customers** (Cluster 1): Target with loyalty programs and premium offers.
 - **Impulse Buyers** (Cluster 4): Focus on promotional campaigns and flash sales.
@@ -96,7 +94,7 @@ python src/main.py
 
 ---
 
-##  Future Improvements
+## Future Improvements
 
 - Comparison between Standard K-Means vs PSO-KMeans
 - Streamlit Web Application
@@ -105,22 +103,14 @@ python src/main.py
 
 ---
 
-##  License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-##  Author
+## Author
 
-**Kifayat Irfan**  
-Machine Learning Enthusiast | Data Science Portfolio
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://linkedin.com/in/YOUR_LINKEDIN)
-
----
+**Kifayat Irfan**
 
 **⭐ Star this repository if you found it helpful!**
-
-```
-
